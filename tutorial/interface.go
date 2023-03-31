@@ -37,6 +37,7 @@ type geometry interface {
 	perim() float64
 }
 
+// 测试
 func measure(g geometry) {
 	fmt.Println(g)
 	fmt.Println(g.area())
