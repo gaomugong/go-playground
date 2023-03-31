@@ -5,6 +5,12 @@ import (
 	"math"
 )
 
+// 定义接口geometry
+type geometry interface {
+	area() float64
+	perim() float64
+}
+
 type rect struct {
 	width, height float64
 }
@@ -29,12 +35,6 @@ func (c circle) area() float64 {
 
 func (c circle) perim() float64 {
 	return 2 * math.Pi * c.radius
-}
-
-// 定义接口geometry
-type geometry interface {
-	area() float64
-	perim() float64
 }
 
 // 测试
