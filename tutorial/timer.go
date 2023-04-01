@@ -25,6 +25,5 @@ func main() {
 	time.Sleep(2 * time.Second)
 }
 
-//output:
 //Timer1 fired
 //Timer2 stoped
