@@ -14,10 +14,23 @@ func main() {
 	fmt.Println(msg)
 
 	// make a string channel buffering up to 2 values
-	messages1 := make(chan string, 2)
-	messages1 <- "buffered"
-	messages1 <- "channel"
+	queue := make(chan string, 2)
+	queue <- "buffered"
+	queue <- "channel"
 
-	fmt.Println(<-messages1)
-	fmt.Println(<-messages1)
+	fmt.Println(<-queue)
+	fmt.Println(<-queue)
+
+	//
+	queue <- "one"
+	queue <- "two"
+	// fatal error: all goroutines are asleep - deadlock!
+	close(queue)
+	// This `range` iterates over each element as it's
+	// received from `queue`. Because we `close`d the
+	// channel above, the iteration terminates after
+	// receiving the 2 elements.
+	for elem := range queue {
+		fmt.Println(elem)
+	}
 }
