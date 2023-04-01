@@ -32,7 +32,7 @@ func main() {
 	}
 
 	// start 10 gr to simulate writes using the same patterns we did for reads
-	for r := 0; r < 10; r++ {
+	for w := 0; w < 10; w++ {
 		go func() {
 			for {
 				key := rand.Intn(5)
