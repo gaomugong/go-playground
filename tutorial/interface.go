@@ -44,7 +44,7 @@ func measure(g geometry) {
 	fmt.Println(g.perim())
 }
 
-// 定义一个可以接收任何参数的函数
+// 1. 作为函数参数类型，可以接受任意类型的参数。
 func myfunc(iface interface{}) {
 	fmt.Printf("type: %T, value: %v\n", iface, iface)
 }
@@ -82,12 +82,15 @@ func main() {
 	any1[2] = []int{1, 2, 3, 4, 5}
 	myfunc(any1)
 
+	// 3. 作为结构体的成员变量类型，可以存储任意类型的值。
+	// 2. 作为map的值类型，可以存储任意类型的值。
 	b := make(map[string]interface{})
 	b["name"] = "zhangsan"
 	b["age"] = 20
 	fmt.Println(b)
 
 	// type-switch
+	// 4. 通过类型断言将空接口转换为具体类型，从而操作具体类型的值。
 	switch i.(type) {
 	case int:
 		fmt.Println("i is int")
