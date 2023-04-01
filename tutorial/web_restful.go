@@ -45,6 +45,8 @@ var books = make([]Book, 0)
 
 func main() {
 	r := chi.NewRouter()
+
+	// https://go-chi.io/#/pages/middleware
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
