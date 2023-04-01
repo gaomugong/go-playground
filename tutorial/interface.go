@@ -82,6 +82,11 @@ func main() {
 	any1[2] = []int{1, 2, 3, 4, 5}
 	myfunc(any1)
 
+	b := make(map[string]interface{})
+	b["name"] = "zhangsan"
+	b["age"] = 20
+	fmt.Println(b)
+
 	// type-switch
 	switch i.(type) {
 	case int:
