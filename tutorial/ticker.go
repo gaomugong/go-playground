@@ -28,8 +28,8 @@ func main() {
 	fmt.Println("Ticker stopped")
 }
 
-//Tick at 2023-04-01 19:52:23.78669 +0800 CST m=+0.500230584
-//Tick at 2023-04-01 19:52:24.287595 +0800 CST m=+1.001137792
-//Tick at 2023-04-01 19:52:24.787622 +0800 CST m=+1.501166376
-//Ticker stopped
-//exit from done
+// Tick at 2023-04-01 19:52:23.78669 +0800 CST m=+0.500230584
+// Tick at 2023-04-01 19:52:24.287595 +0800 CST m=+1.001137792
+// Tick at 2023-04-01 19:52:24.787622 +0800 CST m=+1.501166376
+// Ticker stopped
+// exit from done
