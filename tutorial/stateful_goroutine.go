@@ -16,12 +16,15 @@ import (
 	"time"
 )
 
+// 封装读写请求结构体，内部含有用于通信的channel
 type readOp struct {
 	key int
 	// receive value from resp channel
 	resp chan int
 }
 
+// writeOp is used to store data related to a write operation.
+// It contains a key, value, and a response channel.
 type writeOp struct {
 	key int
 	val int
@@ -36,6 +39,7 @@ func main() {
 	writes := make(chan writeOp)
 
 	// the gr which owns the `state` which handle w/r reqs from other gr and make response
+	// 由一个gr保管中心化的state，通过借助channel与这个gr通信的方式来共享state
 	go func() {
 		var state = make(map[int]int)
 		for {
