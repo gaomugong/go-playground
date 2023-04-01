@@ -82,4 +82,13 @@ func main() {
 	any1[2] = []int{1, 2, 3, 4, 5}
 	myfunc(any1)
 
+	// switch-ok 断言
+	switch i.(type) {
+	case int:
+		fmt.Println("i is int")
+	case string:
+		fmt.Println("i is string")
+	default:
+		fmt.Println("unknown type")
+	}
 }
