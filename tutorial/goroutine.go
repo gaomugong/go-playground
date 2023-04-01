@@ -15,6 +15,7 @@ func f(from string) {
 func main() {
 	go f("first goroutine")
 	go f("second goroutine")
+
 	// start a goroutine for an anonymous function call
 	go func(msg string) {
 		fmt.Println(msg)
