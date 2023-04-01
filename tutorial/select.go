@@ -22,13 +22,16 @@ func main() {
 	}()
 
 	// use select to await both of these values simultaneously and print
-	for i := 0; i < 2; i++ {
+	// if read nothing in 3s, exit for timeout
+	for i := 0; i < 3; i++ {
 		fmt.Println("use select to await both of these values")
 		select {
 		case msg1 := <-c1:
 			fmt.Println("received", msg1)
 		case msg2 := <-c2:
 			fmt.Println("received", msg2)
+		case <-time.After(2 * time.Second):
+			fmt.Println("timeout")
 		}
 	}
 
