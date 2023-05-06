@@ -1,0 +1,8 @@
+go 1.19
+
+use (
+	./demo
+	./util
+)
+
+// replace github.com/iswbw/util => ./util

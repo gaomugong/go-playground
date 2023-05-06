@@ -1,0 +1,22 @@
+# 工作空间
+go work init ./demo
+go work init ./util
+
+go work init
+go work use ./util
+go work use ./demo
+
+go work init
+go work use -r .
+
+go work sync
+
+go work edit -fmt go.work
+
+# 任意包含go.work的目录中均可正常run/build
+go run demo/main.go
+go build demo/main.go
+
+# 开发完成后，可以禁用workspace
+go get -u github.com/iswbw/util
+GOWORK=off go run demo/main.go
