@@ -22,9 +22,10 @@ func main() {
 	}()
 
 	// stop the ticker after 1600ms
-	time.Sleep(1600 * time.Millisecond)
+	time.Sleep(2000 * time.Millisecond)
 	ticker.Stop()
 	done <- true
+	time.Sleep(1000 * time.Millisecond)
 	fmt.Println("Ticker stopped")
 }
 
