@@ -23,6 +23,7 @@ func main() {
 		go func() {
 			for c := 0; c < 1000; c++ {
 				atomic.AddUint64(&ops, 1)
+				//ops += 1
 			}
 			// 计数器减一
 			wg.Done()
