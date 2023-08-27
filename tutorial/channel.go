@@ -26,7 +26,7 @@ func main() {
 	queue <- "one"
 	queue <- "two"
 	// fatal error: all goroutines are asleep - deadlock!
-	//close(queue)
+	close(queue)
 	// This `range` iterates over each element as it's
 	// received from `queue`. Because we `close`d the
 	// channel above, the iteration terminates after
