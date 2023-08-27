@@ -21,11 +21,12 @@ func main() {
 	fmt.Println(<-queue)
 	fmt.Println(<-queue)
 
-	//
+	// 遍历时，如果channel 没有关闭，那么会一直等待下去，出现 deadlock 的错误；
+	// 如果在遍历时channel已经关闭，那么在遍历完数据后自动退出遍历
 	queue <- "one"
 	queue <- "two"
 	// fatal error: all goroutines are asleep - deadlock!
-	close(queue)
+	//close(queue)
 	// This `range` iterates over each element as it's
 	// received from `queue`. Because we `close`d the
 	// channel above, the iteration terminates after
