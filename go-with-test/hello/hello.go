@@ -21,6 +21,7 @@ func getPrefix(language string) (prefix string) {
 	return
 }
 
+// Hello go test -v ./hello
 func Hello(name string, language string) string {
 	if name == "" {
 		name = "world"
