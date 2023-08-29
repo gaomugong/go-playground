@@ -1,8 +1,6 @@
 package string
 
 import (
-	"fmt"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -41,6 +39,20 @@ func TestContains(t *testing.T) {
 	}
 }
 
+func stringArrayEqual(arr1, arr2 []string) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+
+	for i := range arr1 {
+		if arr1[i] != arr2[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
 func TestSplit(t *testing.T) {
 	type args struct {
 		s   string
@@ -53,7 +65,7 @@ func TestSplit(t *testing.T) {
 		args args
 		want []string
 	}{
-		{"split by space", args{"hello world", ""}, []string{"hello", "world"}},
+		{"split by space", args{"hello world", " "}, []string{"hello", "world"}},
 		{"split by comma", args{"hello,world", ","}, []string{"hello", "world"}},
 	}
 
@@ -64,13 +76,14 @@ func TestSplit(t *testing.T) {
 	//
 	//
 	// FAIL
-	// 好奇怪的单元测试
+	// 好奇怪的单元测试（reflect.DeepEqual）
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := strings.Split(tt.args.s, tt.args.sep)
-			fmt.Println(got, tt.want)
-			if reflect.DeepEqual(got, tt.want) {
+			// fmt.Println(got, tt.want)
+			// if reflect.DeepEqual(got, tt.want) {
+			if !stringArrayEqual(got, tt.want) {
 				t.Errorf("%s: want %q, got %q", tt.name, tt.want, got)
 			}
 		})
