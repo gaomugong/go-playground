@@ -1,6 +1,7 @@
 package string
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -88,4 +89,45 @@ func TestSplit(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestJoin(t *testing.T) {
+	type args struct {
+		elems []string
+		sep   string
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"join by comma", args{[]string{"hello", "world"}, ","}, "hello,world"},
+		{"join by space", args{[]string{"hello", "world"}, " "}, "hello world"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := strings.Join(tt.args.elems, tt.args.sep)
+			if got != tt.want {
+				t.Errorf("%s: want %q, got %q", tt.name, tt.want, got)
+			}
+		})
+	}
+}
+
+func ExampleStringConverter() {
+	fmt.Println(strings.ToLower("GAOMUGONG"))
+	fmt.Println(strings.Trim(" GAOMUGONG ", " "))
+	fmt.Println(strings.TrimSpace("\t GAOMUGONG \t\n"))
+	fmt.Println(strings.ToUpper("pitou"))
+	fmt.Println(strings.HasPrefix("gao song", "gao"))
+	fmt.Println(strings.HasSuffix("gao song", "song"))
+	// 	Output:
+	// gaomugong
+	// GAOMUGONG
+	// GAOMUGONG
+	// PITOU
+	// true
+	// true
 }
