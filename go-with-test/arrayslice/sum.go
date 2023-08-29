@@ -10,6 +10,7 @@ import "fmt"
 // 使用 len 获取数组和切片的长度
 // 使用测试代码覆盖率的工具
 // reflect.DeepEqual 的妙用和对代码类型安全性的影响
+// https://go.dev/blog/slices-intro
 
 func Sum(nums [5]int) int {
 	sum := 0
