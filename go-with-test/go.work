@@ -7,4 +7,5 @@ use (
 	./string
 	./arrayslice
 	./structs
+	./wallets
 )
