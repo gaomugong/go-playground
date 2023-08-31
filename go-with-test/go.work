@@ -6,4 +6,5 @@ use (
 	./iteration
 	./string
 	./arrayslice
+	./structs
 )
