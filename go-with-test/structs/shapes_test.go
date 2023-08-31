@@ -65,7 +65,11 @@ func TestArea(t *testing.T) {
 
 	for _, tt := range areaTests {
 		t.Run(tt.name, func(t *testing.T) {
-			checkArea(t, tt.shape, tt.want)
+			t.Helper()
+			got := Shape.Area(tt.shape)
+			if got != tt.want {
+				t.Errorf("got %.2f, want %.2f", got, tt.want)
+			}
 		})
 	}
 }
