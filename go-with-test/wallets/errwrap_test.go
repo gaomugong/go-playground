@@ -12,7 +12,7 @@ import (
 func TestErrorWrap(t *testing.T) {
 	_, err := ReadConfig()
 	if err != nil {
-		// 还原错误
+		// 还原被包装后的错误，得到错误的"根源"
 		originalError := errors.Unwrap(err)
 		fmt.Println(originalError)
 		fmt.Println(reflect.TypeOf(originalError))
