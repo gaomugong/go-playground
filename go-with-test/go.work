@@ -1,3 +1,11 @@
 go 1.21.0
 
-use ./hello
+use (
+	./hello
+	./integer
+	./iteration
+	./string
+	./arrayslice
+	./structs
+	./wallets
+)
