@@ -6,16 +6,32 @@ import (
 )
 
 func TestWallet(t *testing.T) {
-	wallet := Wallet{}
-	fmt.Println("wallet.balance address in test", &wallet.balance)
+	t.Run("deposit", func(t *testing.T) {
+		wallet := Wallet{}
+		fmt.Println("wallet.balance address in test", &wallet.balance)
 
-	wallet.Deposit(10)
-	got := wallet.Balance()
-	want := 10
+		wallet.Deposit(10)
+		got := wallet.Balance()
+		want := Bitcoin(10)
 
-	if got != want {
-		t.Errorf("got %d, want %d", got, want)
-	}
+		if got != want {
+			// Bitcoin implement Stringer interface
+			t.Errorf("got %s, want %s", got, want)
+		}
+	})
+
+	t.Run("withdraw", func(t *testing.T) {
+		wallet := Wallet{balance: Bitcoin(20)}
+
+		wallet.Withdraw(10)
+		got := wallet.Balance()
+		want := Bitcoin(10)
+
+		if got != want {
+			t.Errorf("got %s, want %s", got, want)
+		}
+	})
+
 }
 
 // wallet.balance address in test 0x140001161d0
