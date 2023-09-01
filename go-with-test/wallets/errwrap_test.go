@@ -1,16 +1,20 @@
 package wallets
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 )
 
 func TestErrorWrap(t *testing.T) {
 	_, err := ReadConfig()
 	if err != nil {
-		//fmt.Println(err)
+		originalError := errors.Unwrap(err)
+		fmt.Println(originalError)
+		fmt.Println(reflect.TypeOf(originalError))
 		t.Errorf("got error: %v", err)
 	}
 }
