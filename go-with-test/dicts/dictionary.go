@@ -1,18 +1,23 @@
 package dicts
 
-import (
-	"errors"
-)
-
 type Dict map[string]string
 
 func (d Dict) Search(s string) string {
 	return d[s]
 }
 
+// 随着对错误使用的增多，我们还可以做一些修改
+type DictErr string
+
+func (d DictErr) Error() string {
+	return string(d)
+}
+
 var (
-	DictKeyNotFound = errors.New("could not find the word you were looking for")
-	DictKeyExist    = errors.New("could not find the word you were looking for")
+	//DictKeyNotFound = errors.New("could not find the word you were looking for")
+	DictKeyNotFound = DictErr("could not find the word you were looking for")
+	//DictKeyExist    = errors.New("could not find the word you were looking for")
+	DictKeyExist = DictErr("could not find the word you were looking for")
 )
 
 func (d Dict) Find(s string) (string, error) {
