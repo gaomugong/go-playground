@@ -18,7 +18,8 @@ var (
 	//DictKeyNotFound = errors.New("could not find the word you were looking for")
 	DictKeyNotFound = DictErr("could not find the word you were looking for")
 	//DictKeyExist    = errors.New("could not find the word you were looking for")
-	DictKeyExist = DictErr("could not find the word you were looking for")
+	DictKeyExist    = DictErr("could add word because it already exist")
+	DictKeyNotExist = DictErr("could update word because it does not exist")
 )
 
 func (d Dict) Find(s string) (string, error) {
@@ -50,4 +51,27 @@ func (d Dict) AddErr(word string, defination string) error {
 		return err
 	}
 	return nil
+}
+
+func (d Dict) Update(word string, defination string) {
+	d[word] = defination
+}
+
+func (d Dict) UpdateErr(word string, defination string) error {
+	_, err := d.Find(word)
+
+	switch err {
+	case DictKeyNotFound:
+		return DictKeyNotExist
+	case nil:
+		d[word] = defination
+	default:
+		return err
+	}
+
+	return nil
+}
+
+func (d Dict) Delete(word string) {
+	delete(d, word)
 }

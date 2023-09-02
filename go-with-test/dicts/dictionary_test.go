@@ -5,6 +5,13 @@ import (
 	"testing"
 )
 
+// 在本节中，我们介绍了很多内容。我们为一个字典应用创建了完整的 CRUD API。在整个过程中，我们学会了如何：
+// 创建 map
+// 在 map 中搜索值
+// 向 map 添加新值
+// 更新 map 中的值
+// 从 map 中删除值
+
 const testStr = "this is just a test"
 
 func TestSearch(t *testing.T) {
@@ -124,4 +131,39 @@ func TestAddErr(t *testing.T) {
 		assertError(t, err, DictKeyExist)
 		assertDefination(t, dict, word, defination)
 	})
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("update exist", func(t *testing.T) {
+		word, defination := "test", testStr
+		dict := Dict{word: defination}
+
+		newDefination := "new defination"
+		err := dict.UpdateErr(word, newDefination)
+
+		assertError(t, err, nil)
+		assertDefination(t, dict, word, newDefination)
+	})
+
+	t.Run("update none exist", func(t *testing.T) {
+		word := "test"
+		dict := Dict{}
+		newDefination := "new defination"
+
+		err := dict.UpdateErr(word, newDefination)
+		assertError(t, err, DictKeyNotExist)
+	})
+
+}
+
+func TestDelete(t *testing.T) {
+	word, defination := "test", testStr
+	dict := Dict{word: defination}
+
+	dict.Delete(word)
+	//dict.Delete("unknown")
+
+	_, err := dict.Find(word)
+	assertError(t, err, DictKeyNotFound)
+
 }
