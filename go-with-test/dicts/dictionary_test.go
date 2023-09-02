@@ -48,16 +48,18 @@ func TestFind(t *testing.T) {
 		if err == nil {
 			t.Fatal("expected to get an error")
 		}
-		assertError(t, err, DictKeyError)
+		assertError(t, err, DictKeyNotFound)
 	})
 
 }
 
 func TestAdd(t *testing.T) {
 	dict := Dict{}
-	dict.Add("test", testStr)
-
+	key := "test"
 	want := testStr
+
+	dict.Add(key, testStr)
+
 	got, err := dict.Find("test")
 	if err != nil {
 		t.Fatal("add new word failed -> ", err)
@@ -88,4 +90,38 @@ func TestMap(t *testing.T) {
 	var m map[string]string
 	m["a"] = "b"
 
+}
+
+// assertDefination 将定义断言移到了自己的辅助函数
+func assertDefination(t *testing.T, dict Dict, word, defination string) {
+	got, err := dict.Find(word)
+	if err != nil {
+		t.Fatal("add new word failed -> ", err)
+	}
+
+	if defination != got {
+		t.Errorf("got %s, want %s", got, defination)
+	}
+}
+
+func TestAddErr(t *testing.T) {
+	t.Run("new word", func(t *testing.T) {
+		dict := Dict{}
+		word, defination := "test", testStr
+		err := dict.AddErr(word, defination)
+
+		assertError(t, err, nil)
+		assertDefination(t, dict, word, defination)
+	})
+
+	t.Run("exist word", func(t *testing.T) {
+		word, defination := "test", testStr
+
+		dict := Dict{word: defination}
+
+		err := dict.AddErr(word, defination)
+
+		assertError(t, err, DictKeyExist)
+		assertDefination(t, dict, word, defination)
+	})
 }
