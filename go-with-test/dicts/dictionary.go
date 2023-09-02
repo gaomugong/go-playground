@@ -18,3 +18,9 @@ func (d Dict) Find(s string) (string, error) {
 	}
 	return "", DictKeyError
 }
+
+func (d Dict) Add(key string, value string) {
+	//Map 有一个有趣的特性，不使用指针传递你就可以修改它们。这是因为 map 是引用类型。
+	//这意味着它拥有对底层数据结构的引用，就像指针一样。
+	d[key] = value
+}
