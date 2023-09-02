@@ -7,6 +7,7 @@ func (d Dict) Search(s string) string {
 }
 
 // 随着对错误使用的增多，我们还可以做一些修改
+// 使错误更具可重用性和不可变性
 type DictErr string
 
 func (d DictErr) Error() string {
