@@ -61,7 +61,7 @@ func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 		}(url)
 
 	}
-
+	// 不能并发的部分仍然是线性处理。我们使用 channel 在多个进程间通信
 	for i := 0; i < len(urls); i++ {
 		result := <-resultChannels
 		results[result.string] = result.bool
