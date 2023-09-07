@@ -1,4 +1,4 @@
-package selects
+package v1
 
 import (
 	"fmt"
