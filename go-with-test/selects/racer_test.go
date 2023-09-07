@@ -20,6 +20,7 @@ func TestRacer(t *testing.T) {
 	}))
 
 	fastServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// time.Sleep(time.Millisecond * 200)
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -36,4 +37,7 @@ func TestRacer(t *testing.T) {
 	if want != got {
 		t.Errorf("Want %#v, got %#v", want, got)
 	}
+
+	slowServer.Close()
+	fastServer.Close()
 }
