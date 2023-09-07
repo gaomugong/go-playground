@@ -2,13 +2,18 @@ package concurrency
 
 import (
 	"fmt"
-	"time"
 )
 
 type WebsiteChecker func(string) bool
 
+type result struct {
+	string
+	bool
+}
+
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 	results := make(map[string]bool)
+	resultChannels := make(chan result)
 
 	for _, url := range urls {
 		// v0
@@ -51,12 +56,18 @@ func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 			// Write at 0x00c000100390 by goroutine 10:
 			// concurrency.CheckWebsites.func2()
 			// go-with-test/concurrency/checkwebsites.go:48 +0x134
-			results[url] = wc(url)
+			// results[url] = wc(url)
+			resultChannels <- result{url, wc(url)}
 		}(url)
 
 	}
 
-	time.Sleep(time.Second * 2)
+	for i := 0; i < len(urls); i++ {
+		result := <-resultChannels
+		results[result.string] = result.bool
+	}
+
+	// time.Sleep(time.Second * 2)
 	// checkwebsites_test.go:32: Want map[http://blog.gypsydave5.com:false http://google.com:false waat://furhurterwe.geds:true], got map[waat://furhurterwe.geds:true]
 	// checkwebsites_test.go:22: Wanted 3, got 1
 	return results
