@@ -14,15 +14,8 @@ func TestRacer(t *testing.T) {
 	// fastURL := "http://www.quii.co.uk"
 
 	// v2
-	slowServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(time.Millisecond * 20)
-		w.WriteHeader(http.StatusOK)
-	}))
-
-	fastServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// time.Sleep(time.Millisecond * 200)
-		w.WriteHeader(http.StatusOK)
-	}))
+	slowServer := makeDelayedServer(time.Millisecond * 20)
+	fastServer := makeDelayedServer(time.Millisecond * 0)
 
 	// want := fastURL
 	want := fastServer.URL
@@ -40,4 +33,11 @@ func TestRacer(t *testing.T) {
 
 	slowServer.Close()
 	fastServer.Close()
+}
+
+func makeDelayedServer(duration time.Duration) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(duration)
+		w.WriteHeader(http.StatusOK)
+	}))
 }
