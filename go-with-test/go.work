@@ -10,4 +10,5 @@ use (
 	./wallets
 	./dicts
 	./concurrency
+	./selects
 )
