@@ -17,6 +17,10 @@ func TestRacer(t *testing.T) {
 	slowServer := makeDelayedServer(time.Millisecond * 20)
 	fastServer := makeDelayedServer(time.Millisecond * 0)
 
+	// 把它放在你创建服务器语句附近，以便函数内后面的代码仍可以使用这个服务器
+	defer slowServer.Close()
+	defer fastServer.Close()
+
 	// want := fastURL
 	want := fastServer.URL
 
@@ -31,8 +35,8 @@ func TestRacer(t *testing.T) {
 		t.Errorf("Want %#v, got %#v", want, got)
 	}
 
-	slowServer.Close()
-	fastServer.Close()
+	// slowServer.Close()
+	// fastServer.Close()
 }
 
 // makeDelayedServer 将一些不感兴趣的代码移出测试并减少了重复代码
