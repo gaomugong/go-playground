@@ -35,6 +35,7 @@ func TestRacer(t *testing.T) {
 	fastServer.Close()
 }
 
+// makeDelayedServer 将一些不感兴趣的代码移出测试并减少了重复代码
 func makeDelayedServer(duration time.Duration) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(duration)

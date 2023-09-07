@@ -18,6 +18,7 @@ func Racer(a string, b string) (winner string) {
 	return b
 }
 
+// measureResponseTime 代码复用
 func measureResponseTime(url string) time.Duration {
 	startA := time.Now()
 	_, _ = http.Get(url)
