@@ -9,4 +9,5 @@ use (
 	./structs
 	./wallets
 	./dicts
+	./concurrency
 )
