@@ -55,6 +55,19 @@ func TestWalk(t *testing.T) {
 				"Chris", "London",
 			},
 		},
+		{
+			Name: "Walking three fields struct",
+			Input: struct {
+				Name string
+				Age  int
+				City string
+			}{
+				"Chris", 20, "London",
+			},
+			ExpectedCalls: []string{
+				"Chris", "London",
+			},
+		},
 	}
 
 	for _, c := range cases {
