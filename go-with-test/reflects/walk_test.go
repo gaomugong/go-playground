@@ -80,11 +80,17 @@ func TestWalk(t *testing.T) {
 		},
 		{
 			Name: "Walking nested fields",
-			Input: struct {
-				Name    string
-				Profile Profile
-			}{
+			Input: Person{
 				"Chris", Profile{20, "London"},
+			},
+			ExpectedCalls: []string{
+				"Chris", "London",
+			},
+		},
+		{
+			Name: "Walking pointed fields",
+			Input: &Person{
+				"Chris", Profile{33, "London"},
 			},
 			ExpectedCalls: []string{
 				"Chris", "London",
