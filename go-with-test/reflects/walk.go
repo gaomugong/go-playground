@@ -97,20 +97,27 @@ import (
 func walk(x interface{}, fn func(input string)) {
 	val := getValue(x)
 
+	walkValue := func(value reflect.Value) {
+		walk(value.Interface(), fn)
+	}
+
 	// 如果是 struct 或切片，我们会遍历它的值，并对每个值调用 walk 函数。
 	// 如果是 reflect.String，我们就调用 fn
 	switch val.Kind() {
 	case reflect.Map:
 		for _, key := range val.MapKeys() {
-			walk(val.MapIndex(key).Interface(), fn)
+			walkValue(val.MapIndex(key))
+			//walk(val.MapIndex(key).Interface(), fn)
 		}
 	case reflect.Struct:
 		for i := 0; i < val.NumField(); i++ {
-			walk(val.Field(i).Interface(), fn)
+			walkValue(val.Field(i))
+			//walk(val.Field(i).Interface(), fn)
 		}
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < val.Len(); i++ {
-			walk(val.Index(i).Interface(), fn)
+			walkValue(val.Index(i))
+			//walk(val.Index(i).Interface(), fn)
 		}
 	case reflect.String:
 		fn(val.String())
