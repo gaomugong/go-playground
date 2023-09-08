@@ -116,16 +116,20 @@ func TestWalk(t *testing.T) {
 				"Hello", "Tianjin",
 			},
 		},
-		{
-			Name: "Walking slice fields",
-			Input: map[string]string{
-				"Foo": "Bar",
-				"Baz": "Boz",
-			},
-			ExpectedCalls: []string{
-				"Bar", "Boz",
-			},
-		},
+		// Go 中的 map 不能保证顺序一致。因此，你的测试有时会失败，因为我们断言对 fn 的调用是以特定的顺序完成的。
+		// 为了解决这个问题，我们需要将带有 map 的断言移动到一个新的测试中，在这个测试中我们不关心顺序
+		//{
+		//	Name: "Walking map fields",
+		//	Input: map[string]string{
+		//		"Foo": "Bar",
+		//		"Baz": "Boz",
+		//		"Cat": "Miya",
+		//	},
+		//	// Expected [Bar Boz Miya], got [Miya Bar Boz]
+		//	ExpectedCalls: []string{
+		//		"Bar", "Boz", "Miya",
+		//	},
+		//},
 	}
 
 	for _, c := range cases {
@@ -141,4 +145,33 @@ func TestWalk(t *testing.T) {
 		})
 	}
 
+	t.Run("with maps", func(t *testing.T) {
+		aMap := map[string]string{
+			"Foo": "Bar",
+			"Baz": "Boz",
+			"Cat": "Miya",
+		}
+
+		var got []string
+		walk(aMap, func(input string) {
+			got = append(got, input)
+		})
+
+		assertContains(t, got, "Bar")
+		assertContains(t, got, "Boz")
+		assertContains(t, got, "Miya")
+	})
+}
+
+func assertContains(t *testing.T, haystack []string, needle string) {
+	contains := false
+	for _, x := range haystack {
+		if x == needle {
+			contains = true
+		}
+	}
+
+	if !contains {
+		t.Errorf("Expected %+v to contains %#v, but didn't", haystack, needle)
+	}
 }
