@@ -106,6 +106,26 @@ func TestWalk(t *testing.T) {
 				"Chris", "London",
 			},
 		},
+		{
+			Name: "Walking slice fields",
+			Input: [2]Profile{
+				Profile{33, "Hello"},
+				Profile{23, "Tianjin"},
+			},
+			ExpectedCalls: []string{
+				"Hello", "Tianjin",
+			},
+		},
+		{
+			Name: "Walking slice fields",
+			Input: map[string]string{
+				"Foo": "Bar",
+				"Baz": "Boz",
+			},
+			ExpectedCalls: []string{
+				"Bar", "Boz",
+			},
+		},
 	}
 
 	for _, c := range cases {
