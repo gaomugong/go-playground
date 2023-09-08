@@ -2,13 +2,14 @@ go 1.21.0
 
 use (
 	./arrayslice
+	./concurrency
+	./dicts
 	./hello
 	./integer
 	./iteration
+	./reflects
+	./selects
 	./string
 	./structs
 	./wallets
-	./dicts
-	./concurrency
-	./selects
 )

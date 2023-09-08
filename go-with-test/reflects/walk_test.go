@@ -7,23 +7,25 @@ import (
 
 func TestWalk(t *testing.T) {
 
-	//expected := "Chris"
-	//var got []string
-	//x := struct {
-	//	Name string
-	//}{expected}
-	//
-	//walk(x, func(input string) {
-	//	got = append(got, input)
-	//})
-	//
-	//if len(got) != 1 {
-	//	t.Errorf("Expected 1 element, got %d", len(got))
-	//}
-	//
-	//if got[0] != expected {
-	//	t.Errorf("Expected %s, got %s", expected, got[0])
-	//}
+	t.Run("v1", func(t *testing.T) {
+		expected := "Chris"
+		var got []string
+		x := struct {
+			Name string
+		}{expected}
+
+		walk(x, func(input string) {
+			got = append(got, input)
+		})
+
+		if len(got) != 1 {
+			t.Errorf("Expected 1 element, got %d", len(got))
+		}
+
+		if got[0] != expected {
+			t.Errorf("Expected %s, got %s", expected, got[0])
+		}
+	})
 
 	cases := []struct {
 		Name          string
@@ -31,7 +33,7 @@ func TestWalk(t *testing.T) {
 		ExpectedCalls []string
 	}{
 		{
-			Name: "Walking a struct",
+			Name: "Walking one fields struct",
 			Input: struct {
 				Name string
 			}{
@@ -68,10 +70,4 @@ func TestWalk(t *testing.T) {
 		})
 	}
 
-}
-
-func walk(x interface{}, fn func(input string)) {
-	val := reflect.ValueOf(x)
-	field := val.Field(0)
-	fn(field.String())
 }
