@@ -96,6 +96,16 @@ func TestWalk(t *testing.T) {
 				"Chris", "London",
 			},
 		},
+		{
+			Name: "Walking slice fields",
+			Input: []Profile{
+				Profile{33, "Chris"},
+				Profile{23, "London"},
+			},
+			ExpectedCalls: []string{
+				"Chris", "London",
+			},
+		},
 	}
 
 	for _, c := range cases {
