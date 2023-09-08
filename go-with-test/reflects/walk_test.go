@@ -5,6 +5,16 @@ import (
 	"testing"
 )
 
+type Profile struct {
+	Age  int
+	City string
+}
+
+type Person struct {
+	Name    string
+	Profile Profile
+}
+
 func TestWalk(t *testing.T) {
 
 	t.Run("v1", func(t *testing.T) {
@@ -63,6 +73,18 @@ func TestWalk(t *testing.T) {
 				City string
 			}{
 				"Chris", 20, "London",
+			},
+			ExpectedCalls: []string{
+				"Chris", "London",
+			},
+		},
+		{
+			Name: "Walking nested fields",
+			Input: struct {
+				Name    string
+				Profile Profile
+			}{
+				"Chris", Profile{20, "London"},
 			},
 			ExpectedCalls: []string{
 				"Chris", "London",

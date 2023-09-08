@@ -1,6 +1,8 @@
 package reflects
 
-import "reflect"
+import (
+	"reflect"
+)
 
 //func walk(x interface{}, fn func(input string)) {
 //	val := reflect.ValueOf(x)
@@ -16,6 +18,10 @@ func walk(x interface{}, fn func(input string)) {
 
 		if field.Kind() == reflect.String {
 			fn(field.String())
+		}
+		if field.Kind() == reflect.Struct {
+			//fmt.Println("find struct field")
+			walk(field.Interface(), fn)
 		}
 	}
 }
