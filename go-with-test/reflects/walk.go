@@ -30,6 +30,7 @@ func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
 
 	if val.Kind() == reflect.Ptr {
+		// Elem() 提取底层值
 		val = val.Elem()
 	}
 
