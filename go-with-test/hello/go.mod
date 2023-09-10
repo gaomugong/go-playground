@@ -1,3 +1,3 @@
-module go.test/hello
+module hello
 
 go 1.21.0

@@ -13,4 +13,5 @@ use (
 	./structs
 	./wallets
 	./players
+	./players/server
 )
