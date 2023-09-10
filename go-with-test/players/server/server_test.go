@@ -27,6 +27,22 @@ func (s *StubPlayerStore) GetPlayerScore(player string) int {
 	return s.scores[player]
 }
 
+func TestScoreWins(t *testing.T) {
+	store := StubPlayerStore{
+		map[string]int{},
+	}
+	server := &PlayerServer{&store}
+
+	t.Run("it returns accepted on post", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodPost, "/players/Petter", nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		assertStatus(t, response.Code, http.StatusAccepted)
+	})
+}
+
 func TestGetPlayers(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{
