@@ -19,6 +19,14 @@ func newGetScoreRequest(player string) *http.Request {
 	return request
 }
 
+type StubPlayerStore struct {
+	scores map[string]int
+}
+
+func (s *StubPlayerStore) GetPlayerScore(player string) int {
+	return s.scores[player]
+}
+
 func TestGetPlayers(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{
@@ -28,7 +36,7 @@ func TestGetPlayers(t *testing.T) {
 	}
 	server := &PlayerServer{&store}
 
-	t.Run("return Peter's score", func(t *testing.T) {
+	t.Run("return Peter's store", func(t *testing.T) {
 		request := newGetScoreRequest("Petter")
 		response := httptest.NewRecorder()
 
@@ -38,7 +46,7 @@ func TestGetPlayers(t *testing.T) {
 
 	})
 
-	t.Run("return Floyd's score", func(t *testing.T) {
+	t.Run("return Floyd's store", func(t *testing.T) {
 		request := newGetScoreRequest("Floyd")
 		response := httptest.NewRecorder()
 

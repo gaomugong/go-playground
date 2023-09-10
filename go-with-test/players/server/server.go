@@ -10,18 +10,14 @@ type PlayerStore interface {
 }
 
 type PlayerServer struct {
-	score PlayerStore
+	store PlayerStore
+}
+
+func (s *PlayerServer) SetStore(store PlayerStore) {
+	s.store = store
 }
 
 func (s *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	player := r.URL.Path[len("/players/"):]
-	fmt.Fprint(w, s.score.GetPlayerScore(player))
-}
-
-type StubPlayerStore struct {
-	scores map[string]int
-}
-
-func (s *StubPlayerStore) GetPlayerScore(player string) int {
-	return s.scores[player]
+	fmt.Fprint(w, s.store.GetPlayerScore(player))
 }
