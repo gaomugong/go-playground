@@ -13,11 +13,20 @@ type PlayerServer struct {
 	store PlayerStore
 }
 
-func (s *PlayerServer) SetStore(store PlayerStore) {
-	s.store = store
+func (p *PlayerServer) SetStore(store PlayerStore) {
+	p.store = store
 }
 
-func (s *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	player := r.URL.Path[len("/players/"):]
-	fmt.Fprint(w, s.store.GetPlayerScore(player))
+
+	score := p.store.GetPlayerScore(player)
+
+	if score == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	//w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, score)
 }
