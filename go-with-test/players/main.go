@@ -3,11 +3,15 @@ package main
 import (
 	"log"
 	"net/http"
+
 	. "server"
 )
 
 type InMemoryPlayerScore struct {
 	scores map[string]int
+}
+
+func (i *InMemoryPlayerScore) RecordWin(name string) {
 }
 
 func (i *InMemoryPlayerScore) GetPlayerScore(player string) int {

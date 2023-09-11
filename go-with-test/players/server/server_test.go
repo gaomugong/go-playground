@@ -20,16 +20,22 @@ func newGetScoreRequest(player string) *http.Request {
 }
 
 type StubPlayerStore struct {
-	scores map[string]int
+	scores   map[string]int
+	winCalls []string
+}
+
+func (s *StubPlayerStore) RecordWin(name string) {
+	s.winCalls = append(s.winCalls, name)
 }
 
 func (s *StubPlayerStore) GetPlayerScore(player string) int {
 	return s.scores[player]
 }
 
-func TestScoreWins(t *testing.T) {
+func TestStoreWins(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{},
+		nil,
 	}
 	server := &PlayerServer{&store}
 
@@ -40,6 +46,10 @@ func TestScoreWins(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		assertStatus(t, response.Code, http.StatusAccepted)
+
+		if len(store.winCalls) != 1 {
+			t.Errorf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
+		}
 	})
 }
 
@@ -49,6 +59,7 @@ func TestGetPlayers(t *testing.T) {
 			"Petter": 20,
 			"Floyd":  10,
 		},
+		nil,
 	}
 	server := &PlayerServer{&store}
 
