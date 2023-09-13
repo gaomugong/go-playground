@@ -8,7 +8,8 @@ import (
 
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 	store := NewInMemoryPlayerScore()
-	server := PlayerServer{store}
+	// server := PlayerServer{store}
+	server := NewPlayerServer(store)
 	player := "Petter"
 
 	server.ServeHTTP(httptest.NewRecorder(), newPostScoreRequest(player))
