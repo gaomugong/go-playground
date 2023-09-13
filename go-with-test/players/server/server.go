@@ -13,6 +13,7 @@ type PlayerStore interface {
 type PlayerServer struct {
 	store PlayerStore
 	// router *http.ServeMux
+	// 嵌入：PlayerServer拥有了http.Handler的所有方法，即 ServeHTTP
 	http.Handler
 }
 
@@ -24,6 +25,7 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 	// p.router.Handle("/league", http.HandlerFunc(p.leagueHandler))
 	// p.router.Handle("/players", http.HandlerFunc(p.playerHandler))
 
+	// router为 ServeMux 类型（实现了http.Handler接口）
 	router := http.NewServeMux()
 	router.Handle("/league", http.HandlerFunc(p.leagueHandler))
 	router.Handle("/players", http.HandlerFunc(p.playerHandler))
@@ -71,6 +73,7 @@ func (p *PlayerServer) playerHandler(w http.ResponseWriter, r *http.Request) {
 //	fmt.Fprint(w, score)
 // }
 
+// 这允许我们删除我们的 ServeHTTP 方法，因为我们已经通过嵌入类型http.Handler公开了它。
 // func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // 	p.router.ServeHTTP(w, r)
 // }
