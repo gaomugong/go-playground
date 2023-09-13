@@ -38,15 +38,25 @@ func (p *PlayerServer) SetStore(store PlayerStore) {
 // }
 
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	player := r.URL.Path[len("/players/"):]
+	router := http.NewServeMux()
 
-	switch r.Method {
-	case http.MethodPost:
-		p.processWin(w, player)
-		return
-	case http.MethodGet:
-		p.showScore(w, player)
-	}
+	router.Handle("/league", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	router.Handle("/players", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		player := r.URL.Path[len("/players/"):]
+
+		switch r.Method {
+		case http.MethodPost:
+			p.processWin(w, player)
+			return
+		case http.MethodGet:
+			p.showScore(w, player)
+		}
+	}))
+
+	router.ServeHTTP(w, r)
 }
 
 func (p *PlayerServer) processWin(w http.ResponseWriter, player string) {

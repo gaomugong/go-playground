@@ -14,6 +14,13 @@ func assertResponse(t *testing.T, got, want string) {
 	}
 }
 
+func assertStatus(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got status %d, want %d", got, want)
+	}
+}
+
 func newGetScoreRequest(player string) *http.Request {
 	request, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/players/%s", player), nil)
 	return request
@@ -103,9 +110,15 @@ func TestGetPlayers(t *testing.T) {
 	})
 }
 
-func assertStatus(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got status %d, want %d", got, want)
-	}
+func TestLeague(t *testing.T) {
+	store := StubPlayerStore{}
+	server := &PlayerServer{&store}
+
+	t.Run("it returns 200 on /leagure", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+		assertStatus(t, response.Code, http.StatusOK)
+	})
 }
