@@ -115,6 +115,8 @@ func TestGetPlayers(t *testing.T) {
 func TestLeague(t *testing.T) {
 	store := StubPlayerStore{}
 	// server := NewPlayerServer(store)
+	// *StubPlayerStore 实现了接口 PlayerStore
+	// StubPlayerStore的PlayerStore接口方法接收者为*StubPlayerStore
 	server := NewPlayerServer(&store)
 
 	t.Run("it returns 200 on /leagure", func(t *testing.T) {
