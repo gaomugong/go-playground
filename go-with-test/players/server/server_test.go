@@ -137,7 +137,7 @@ func TestLeague(t *testing.T) {
 		// StubPlayerStore的PlayerStore接口方法接收者为*StubPlayerStore
 		server := NewPlayerServer(&store)
 
-		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		request := newLeagueRequest()
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
@@ -149,6 +149,10 @@ func TestLeague(t *testing.T) {
 	})
 }
 
+func newLeagueRequest() *http.Request {
+	request, _ := http.NewRequest(http.MethodGet, "/league", nil)
+	return request
+}
 func assertLeague(t *testing.T, got, want []Player) {
 	t.Helper()
 	if !reflect.DeepEqual(got, want) {
