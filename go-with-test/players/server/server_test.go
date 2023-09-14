@@ -122,6 +122,8 @@ func TestGetPlayers(t *testing.T) {
 	})
 }
 
+const jsonContentType = "application/json"
+
 func TestLeague(t *testing.T) {
 
 	t.Run("it returns league table as Json on /leagure", func(t *testing.T) {
@@ -146,7 +148,16 @@ func TestLeague(t *testing.T) {
 
 		got := getLeagueFromResponse(t, response.Body)
 		assertLeague(t, got, wantedLeague)
+
+		assertContentType(t, response, jsonContentType)
 	})
+}
+
+func assertContentType(t *testing.T, response *httptest.ResponseRecorder, want string) {
+	if response.Header().Get("content-type") != want {
+		t.Errorf("response did not have content-type of application/json got %v", response.Header())
+	}
+
 }
 
 func newLeagueRequest() *http.Request {
