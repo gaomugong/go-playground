@@ -5,7 +5,11 @@ type InMemoryPlayerScore struct {
 }
 
 func (i *InMemoryPlayerScore) GetLeague() []Player {
-	return nil
+	var league []Player
+	for name, wins := range i.scores {
+		league = append(league, Player{name, wins})
+	}
+	return league
 }
 
 func (i *InMemoryPlayerScore) RecordWin(name string) {
