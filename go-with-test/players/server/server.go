@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -16,6 +17,11 @@ type PlayerServer struct {
 	// 嵌入：PlayerServer拥有了http.Handler的所有方法，即 ServeHTTP
 	// 在使用嵌入接口的方式时，需要确保实现了接口中的所有方法
 	http.Handler
+}
+
+type Player struct {
+	Name string
+	Wins int
 }
 
 func NewPlayerServer(store PlayerStore) *PlayerServer {
@@ -40,6 +46,10 @@ func (p *PlayerServer) SetStore(store PlayerStore) {
 }
 
 func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
+	leagueTable := []Player{
+		{"Chris", 20},
+	}
+	_ = json.NewEncoder(w).Encode(leagueTable)
 	w.WriteHeader(http.StatusOK)
 }
 
