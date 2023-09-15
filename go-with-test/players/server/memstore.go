@@ -1,25 +1,25 @@
 package server
 
-type InMemoryPlayerScore struct {
-	scores map[string]int
+type InMemoryPlayerStore struct {
+	store map[string]int
 }
 
-func (i *InMemoryPlayerScore) GetLeague() []Player {
+func (i *InMemoryPlayerStore) GetLeague() []Player {
 	var league []Player
-	for name, wins := range i.scores {
+	for name, wins := range i.store {
 		league = append(league, Player{name, wins})
 	}
 	return league
 }
 
-func (i *InMemoryPlayerScore) RecordWin(name string) {
-	i.scores[name]++
+func (i *InMemoryPlayerStore) RecordWin(name string) {
+	i.store[name]++
 }
 
-func (i *InMemoryPlayerScore) GetPlayerScore(name string) int {
-	return i.scores[name]
+func (i *InMemoryPlayerStore) GetPlayerScore(name string) int {
+	return i.store[name]
 }
 
-func NewInMemoryPlayerScore() *InMemoryPlayerScore {
-	return &InMemoryPlayerScore{map[string]int{}}
+func NewInMemoryPlayerScore() *InMemoryPlayerStore {
+	return &InMemoryPlayerStore{map[string]int{}}
 }

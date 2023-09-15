@@ -36,7 +36,8 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 	// router为 ServeMux 类型（实现了http.Handler接口）
 	router := http.NewServeMux()
 	router.Handle("/league", http.HandlerFunc(p.leagueHandler))
-	router.Handle("/players", http.HandlerFunc(p.playerHandler))
+	// 不要漏了结尾的/
+	router.Handle("/players/", http.HandlerFunc(p.playerHandler))
 	p.Handler = router
 
 	return p
