@@ -53,6 +53,8 @@ func (f *FileSystemStore) RecordWin(name string) {
 	player := league.Find(name)
 	if player != nil {
 		player.Wins++
+	} else {
+		league = append(league, Player{Name: name, Wins: 1})
 	}
 	f.database.Seek(0, 0)
 	json.NewEncoder(f.database).Encode(league)
@@ -137,6 +139,18 @@ func TestFileSystemStore(t *testing.T) {
 
 		got := store.GetPlayerScore("Chris")
 		want := 34
+		assertScoreEquals(t, want, got)
+	})
+
+	t.Run("store new player", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, recordsJson)
+		defer cleanDatabase()
+
+		store := FileSystemStore{database}
+		store.RecordWin("Petter")
+
+		got := store.GetPlayerScore("Petter")
+		want := 1
 		assertScoreEquals(t, want, got)
 	})
 
