@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -23,8 +24,18 @@ func (f *FileSystemStore) GetPlayerScore(name string) int {
 }
 
 func (f *FileSystemStore) RecordWin(name string) {
-	//TODO implement me
-	panic("implement me")
+	league := f.GetLeague()
+	fmt.Printf("league: %#v\n", league)
+	for i, player := range league {
+		if player.Name == name {
+			//player.Wins++
+			league[i].Wins++
+			break
+		}
+	}
+
+	f.database.Seek(0, 0)
+	json.NewEncoder(f.database).Encode(league)
 }
 
 func (f *FileSystemStore) GetLeague() []Player {
@@ -95,4 +106,17 @@ func TestFileSystemStore(t *testing.T) {
 		want := 33
 		assertScoreEquals(t, want, got)
 	})
+
+	t.Run("store player score", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, recordsJson)
+		defer cleanDatabase()
+
+		store := FileSystemStore{database}
+		store.RecordWin("Chris")
+
+		got := store.GetPlayerScore("Chris")
+		want := 34
+		assertScoreEquals(t, want, got)
+	})
+
 }
