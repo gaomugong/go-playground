@@ -21,7 +21,8 @@ func (f *FileSystemStore) RecordWin(name string) {
 }
 
 func (f *FileSystemStore) GetLeague() []Player {
-	return nil
+	league, _ := NewLeague(f.database)
+	return league
 }
 
 func TestFileSystemStore(t *testing.T) {
@@ -38,6 +39,8 @@ func TestFileSystemStore(t *testing.T) {
 			{"Chris", 33},
 		}
 
+		// read again
+		got = store.GetLeague()
 		assertLeague(t, want, got)
 	})
 }
