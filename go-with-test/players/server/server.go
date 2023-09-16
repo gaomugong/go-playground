@@ -9,7 +9,8 @@ import (
 type PlayerStore interface {
 	GetPlayerScore(player string) int
 	RecordWin(name string)
-	GetLeague() []Player
+	//GetLeague() []Player
+	GetLeague() League
 }
 
 type PlayerServer struct {
