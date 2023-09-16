@@ -1,14 +1,16 @@
 package server
 
 import (
+	"fmt"
 	"io"
-	"strings"
+	"os"
 	"testing"
 )
 
 type FileSystemStore struct {
 	//database io.Reader
-	database io.ReadSeeker
+	//database io.ReadSeeker
+	database io.ReadWriteSeeker
 }
 
 func (f *FileSystemStore) GetPlayerScore(name string) int {
@@ -31,11 +33,43 @@ func (f *FileSystemStore) GetLeague() []Player {
 	return league
 }
 
+func assertScoreEquals(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}
+
+func createTempFile(t *testing.T, initialData string) (io.ReadWriteSeeker, func()) {
+	t.Helper()
+
+	tmpfile, err := os.CreateTemp("", "db")
+	fmt.Printf("create tmpfile %s\n", tmpfile.Name())
+
+	if err != nil {
+		t.Fatalf("create tempfile failed: %v", err)
+	}
+
+	tmpfile.Write([]byte(initialData))
+
+	return tmpfile, func() {
+		fmt.Printf("delete tmpfile %s\n", tmpfile.Name())
+		tmpfile.Close()
+		os.Remove(tmpfile.Name())
+	}
+}
+
 func TestFileSystemStore(t *testing.T) {
-	t.Run("/league from a reader", func(t *testing.T) {
-		database := strings.NewReader(`[
+	var recordsJson = `[
 			{"name": "Cleo", "Wins": 10},
-			{"name": "Chris", "Wins": 33}]`)
+			{"name": "Chris", "Wins": 33}]`
+
+	t.Run("/league from a reader", func(t *testing.T) {
+
+		//database := strings.NewReader(recordsJson)
+
+		database, cleanDatabase := createTempFile(t, recordsJson)
+		defer cleanDatabase()
 
 		store := FileSystemStore{database}
 
@@ -51,9 +85,9 @@ func TestFileSystemStore(t *testing.T) {
 	})
 
 	t.Run("get player score", func(t *testing.T) {
-		database := strings.NewReader(`[
-			{"name": "Cleo", "Wins": 10},
-			{"name": "Chris", "Wins": 33}]`)
+		//database := strings.NewReader(recordsJson)
+		database, cleanDatabase := createTempFile(t, recordsJson)
+		defer cleanDatabase()
 
 		store := FileSystemStore{database}
 
@@ -61,11 +95,4 @@ func TestFileSystemStore(t *testing.T) {
 		want := 33
 		assertScoreEquals(t, want, got)
 	})
-}
-
-func assertScoreEquals(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got %d, want %d", got, want)
-	}
 }
