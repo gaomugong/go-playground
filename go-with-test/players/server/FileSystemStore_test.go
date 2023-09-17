@@ -13,6 +13,12 @@ func assertScoreEquals(t *testing.T, got, want int) {
 	}
 }
 
+func assertNoError(t *testing.T, err error) {
+	t.Helper()
+	if err != nil {
+		t.Fatalf("got unexpected error: %v", err)
+	}
+}
 func createTempFile(t *testing.T, initialData string) (*os.File, func()) {
 	t.Helper()
 
@@ -45,9 +51,7 @@ func TestFileSystemStore(t *testing.T) {
 		defer cleanDatabase()
 
 		store, err := NewFileSystemStore(database)
-		if err != nil {
-			t.Fatalf("create player store failed: %v", err)
-		}
+		assertNoError(t, err)
 		//store := FileSystemStore{database}
 
 		got := store.GetLeague()
@@ -68,9 +72,7 @@ func TestFileSystemStore(t *testing.T) {
 
 		//store := FileSystemStore{database}
 		store, err := NewFileSystemStore(database)
-		if err != nil {
-			t.Fatalf("create player store failed: %v", err)
-		}
+		assertNoError(t, err)
 
 		got := store.GetPlayerScore("Chris")
 		want := 33
@@ -83,9 +85,7 @@ func TestFileSystemStore(t *testing.T) {
 
 		//store := FileSystemStore{database}
 		store, err := NewFileSystemStore(database)
-		if err != nil {
-			t.Fatalf("create player store failed: %v", err)
-		}
+		assertNoError(t, err)
 
 		store.RecordWin("Chris")
 
@@ -99,9 +99,7 @@ func TestFileSystemStore(t *testing.T) {
 		defer cleanDatabase()
 
 		store, err := NewFileSystemStore(database)
-		if err != nil {
-			t.Fatalf("create player store failed: %v", err)
-		}
+		assertNoError(t, err)
 
 		//store := FileSystemStore{database}
 		store.RecordWin("Petter")
