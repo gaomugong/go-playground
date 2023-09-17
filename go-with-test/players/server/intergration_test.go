@@ -35,4 +35,12 @@ func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 		assertLeague(t, got, want)
 	})
 
+	t.Run("works with an empty file", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, "")
+		defer cleanDatabase()
+
+		_, err := NewFileSystemStore(database)
+		assertNoError(t, err)
+	})
+
 }

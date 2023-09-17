@@ -16,16 +16,44 @@ type FileSystemStore struct {
 	league   League
 }
 
-func NewFileSystemStore(database *os.File) (*FileSystemStore, error) {
-	database.Seek(0, io.SeekStart)
-	league, err := NewLeague(database)
-	//return &FileSystemStore{database: database, league: league}
-	//return &FileSystemStore{database: &tape{database}, league: league}
+func initialPlayerDBFile(file *os.File) error {
+	info, err := file.Stat()
 	if err != nil {
-		return nil, fmt.Errorf("problem loading player store from file %s: %s", database.Name(), err)
+		return fmt.Errorf("get info from file %s failed: %v", file.Name(), err)
+	}
+
+	if info.Size() == 0 {
+		file.Write([]byte("[]"))
+		file.Seek(0, io.SeekStart)
+	}
+	return nil
+}
+
+func NewFileSystemStore(file *os.File) (*FileSystemStore, error) {
+	file.Seek(0, io.SeekStart)
+
+	//info, err := file.Stat()
+	//if err != nil {
+	//	return nil, fmt.Errorf("get info from file %s failed: %v", file.Name(), err)
+	//}
+	err := initialPlayerDBFile(file)
+	if err != nil {
+		return nil, fmt.Errorf("init db file %s failed: %v", file.Name(), err)
+	}
+	//
+	//if info.Size() == 0 {
+	//	file.Write([]byte("[]"))
+	//	file.Seek(0, io.SeekStart)
+	//}
+
+	league, err := NewLeague(file)
+	//return &FileSystemStore{file: file, league: league}
+	//return &FileSystemStore{file: &tape{file}, league: league}
+	if err != nil {
+		return nil, fmt.Errorf("problem loading player store from file %s: %s", file.Name(), err)
 	}
 	return &FileSystemStore{
-		database: json.NewEncoder(&tape{database}),
+		database: json.NewEncoder(&tape{file}),
 		league:   league,
 	}, nil
 }
