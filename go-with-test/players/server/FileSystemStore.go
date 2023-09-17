@@ -8,6 +8,8 @@ import (
 	"sort"
 )
 
+type League []Player
+
 type FileSystemStore struct {
 	//database io.Reader
 	//database io.ReadSeeker
@@ -15,6 +17,19 @@ type FileSystemStore struct {
 	//database io.Writer
 	database *json.Encoder
 	league   League
+}
+
+func FileSystemStoreFromFile(path string) (*FileSystemStore, error) {
+	dbFile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open store file %s: %v", path, err)
+	}
+
+	store, err := NewFileSystemStore(dbFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create store: %v", err)
+	}
+	return store, nil
 }
 
 func initialPlayerDBFile(file *os.File) error {
@@ -58,8 +73,6 @@ func NewFileSystemStore(file *os.File) (*FileSystemStore, error) {
 		league:   league,
 	}, nil
 }
-
-type League []Player
 
 func (players League) Find(name string) *Player {
 	for i, player := range players {
