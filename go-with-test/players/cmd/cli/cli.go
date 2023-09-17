@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
-	. "server"
+	. "players"
 	"strings"
 )
 

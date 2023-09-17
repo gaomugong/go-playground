@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	. "server"
+	. "players"
 )
 
 const dbFileName = "game.db.json"

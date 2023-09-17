@@ -1,4 +1,4 @@
-package server
+package players
 
 type InMemoryPlayerStore struct {
 	store map[string]int
