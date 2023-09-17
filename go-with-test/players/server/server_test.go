@@ -10,27 +10,7 @@ import (
 	"testing"
 )
 
-type StubPlayerStore struct {
-	scores   map[string]int
-	winCalls []string
-	//league   []Player
-	league League
-}
-
 const jsonContentType = "application/json"
-
-// func (s *StubPlayerStore) GetLeague() []Player {
-func (s *StubPlayerStore) GetLeague() League {
-	return s.league
-}
-
-func (s *StubPlayerStore) RecordWin(name string) {
-	s.winCalls = append(s.winCalls, name)
-}
-
-func (s *StubPlayerStore) GetPlayerScore(player string) int {
-	return s.scores[player]
-}
 
 func assertResponse(t *testing.T, got, want string) {
 	t.Helper()
