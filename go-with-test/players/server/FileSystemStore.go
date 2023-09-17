@@ -4,19 +4,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 )
 
 type FileSystemStore struct {
 	//database io.Reader
 	//database io.ReadSeeker
-	database io.ReadWriteSeeker
+	//database io.ReadWriteSeeker
+	//database io.Writer
+	database *json.Encoder
 	league   League
 }
 
-func NewFileSystemStore(database io.ReadWriteSeeker) *FileSystemStore {
+func NewFileSystemStore(database *os.File) *FileSystemStore {
 	database.Seek(0, io.SeekStart)
 	league, _ := NewLeague(database)
-	return &FileSystemStore{database: database, league: league}
+	//return &FileSystemStore{database: database, league: league}
+	//return &FileSystemStore{database: &tape{database}, league: league}
+	return &FileSystemStore{database: json.NewEncoder(&tape{database}), league: league}
 }
 
 type League []Player
@@ -61,8 +66,9 @@ func (f *FileSystemStore) RecordWin(name string) {
 	} else {
 		f.league = append(f.league, Player{Name: name, Wins: 1})
 	}
-	f.database.Seek(0, 0)
-	json.NewEncoder(f.database).Encode(f.league)
+	//f.database.Seek(0, 0)
+	//json.NewEncoder(f.database).Encode(f.league)
+	f.database.Encode(f.league)
 }
 
 // GetLeague func (f *FileSystemStore) GetLeague() []Player {
