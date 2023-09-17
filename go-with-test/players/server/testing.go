@@ -1,5 +1,7 @@
 package server
 
+import "testing"
+
 type StubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
@@ -26,4 +28,18 @@ func (s *StubPlayerStore) RecordWin(name string) {
 
 func (s *StubPlayerStore) GetPlayerScore(player string) int {
 	return s.scores[player]
+}
+
+func AssertPlayerWin(t *testing.T, store *StubPlayerStore, winner string) {
+	t.Helper()
+
+	if len(store.WinCalls()) != 1 {
+		t.Fatalf("got %d calls to RecordWin, want %d", len(store.WinCalls()), 1)
+	}
+
+	got := store.WinCalls()[0]
+	if got != winner {
+		t.Fatalf("did not store correct winner got %#v, want %#v", got, winner)
+	}
+
 }
