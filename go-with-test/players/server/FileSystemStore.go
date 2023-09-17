@@ -10,10 +10,13 @@ type FileSystemStore struct {
 	//database io.Reader
 	//database io.ReadSeeker
 	database io.ReadWriteSeeker
+	league   League
 }
 
 func NewFileSystemStore(database io.ReadWriteSeeker) *FileSystemStore {
-	return &FileSystemStore{database: database}
+	database.Seek(0, io.SeekStart)
+	league, _ := NewLeague(database)
+	return &FileSystemStore{database: database, league: league}
 }
 
 type League []Player
@@ -43,8 +46,8 @@ func (f *FileSystemStore) GetPlayerScore(name string) int {
 }
 
 func (f *FileSystemStore) RecordWin(name string) {
-	league := f.GetLeague()
-	fmt.Printf("league: %#v\n", league)
+	//league := f.GetLeague()
+	fmt.Printf("league: %#v\n", f.league)
 	//for i, player := range league {
 	//	if player.Name == name {
 	//		//player.Wins++
@@ -52,19 +55,20 @@ func (f *FileSystemStore) RecordWin(name string) {
 	//		break
 	//	}
 	//}
-	player := league.Find(name)
+	player := f.league.Find(name)
 	if player != nil {
 		player.Wins++
 	} else {
-		league = append(league, Player{Name: name, Wins: 1})
+		f.league = append(f.league, Player{Name: name, Wins: 1})
 	}
 	f.database.Seek(0, 0)
-	json.NewEncoder(f.database).Encode(league)
+	json.NewEncoder(f.database).Encode(f.league)
 }
 
 // GetLeague func (f *FileSystemStore) GetLeague() []Player {
 func (f *FileSystemStore) GetLeague() League {
-	f.database.Seek(0, 0)
-	league, _ := NewLeague(f.database)
-	return league
+	//f.database.Seek(0, 0)
+	//league, _ := NewLeague(f.database)
+	//return league
+	return f.league
 }

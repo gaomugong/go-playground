@@ -13,12 +13,14 @@ import (
 type StubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
-	league   []Player
+	//league   []Player
+	league League
 }
 
 const jsonContentType = "application/json"
 
-func (s *StubPlayerStore) GetLeague() []Player {
+// func (s *StubPlayerStore) GetLeague() []Player {
+func (s *StubPlayerStore) GetLeague() League {
 	return s.league
 }
 
