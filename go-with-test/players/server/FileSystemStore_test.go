@@ -44,7 +44,10 @@ func TestFileSystemStore(t *testing.T) {
 		database, cleanDatabase := createTempFile(t, recordsJson)
 		defer cleanDatabase()
 
-		store := NewFileSystemStore(database)
+		store, err := NewFileSystemStore(database)
+		if err != nil {
+			t.Fatalf("create player store failed: %v", err)
+		}
 		//store := FileSystemStore{database}
 
 		got := store.GetLeague()
@@ -64,7 +67,10 @@ func TestFileSystemStore(t *testing.T) {
 		defer cleanDatabase()
 
 		//store := FileSystemStore{database}
-		store := NewFileSystemStore(database)
+		store, err := NewFileSystemStore(database)
+		if err != nil {
+			t.Fatalf("create player store failed: %v", err)
+		}
 
 		got := store.GetPlayerScore("Chris")
 		want := 33
@@ -76,7 +82,11 @@ func TestFileSystemStore(t *testing.T) {
 		defer cleanDatabase()
 
 		//store := FileSystemStore{database}
-		store := NewFileSystemStore(database)
+		store, err := NewFileSystemStore(database)
+		if err != nil {
+			t.Fatalf("create player store failed: %v", err)
+		}
+
 		store.RecordWin("Chris")
 
 		got := store.GetPlayerScore("Chris")
@@ -88,7 +98,11 @@ func TestFileSystemStore(t *testing.T) {
 		database, cleanDatabase := createTempFile(t, recordsJson)
 		defer cleanDatabase()
 
-		store := NewFileSystemStore(database)
+		store, err := NewFileSystemStore(database)
+		if err != nil {
+			t.Fatalf("create player store failed: %v", err)
+		}
+
 		//store := FileSystemStore{database}
 		store.RecordWin("Petter")
 
