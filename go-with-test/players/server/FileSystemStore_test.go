@@ -55,14 +55,15 @@ func TestFileSystemStore(t *testing.T) {
 		//store := FileSystemStore{database}
 
 		got := store.GetLeague()
+		//sorted
 		want := []Player{
-			{"Cleo", 10},
 			{"Chris", 33},
+			{"Cleo", 10},
 		}
 
 		// read again
 		got = store.GetLeague()
-		assertLeague(t, want, got)
+		assertLeague(t, got, want)
 	})
 
 	t.Run("get player score", func(t *testing.T) {
