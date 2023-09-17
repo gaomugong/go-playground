@@ -1,7 +1,6 @@
-package main
+package players
 
 import (
-	. "players"
 	"strings"
 	"testing"
 )
