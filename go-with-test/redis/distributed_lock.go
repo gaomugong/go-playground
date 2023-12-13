@@ -54,12 +54,13 @@ func getRdb() *redis.Client {
 // task 模拟任务
 func task() {
 	ctx := context.Background()
-
 	locked := Lock(ctx)
 	for !locked {
 		fmt.Println("lock failed, try after 1s")
 		select {
+		// 创建一个持续运行的计时器，即使在循环结束后，计时器仍然会运行，可能导致资源泄露
 		// case <-time.Tick(time.Millisecond * 500):
+		// 每次循环时都会创建一个新的计时器，使用完后可以被垃圾回收，可以避免资源泄露，推荐
 		case <-time.After(time.Millisecond * 500):
 			locked = Lock(ctx)
 		case <-ctx.Done():
