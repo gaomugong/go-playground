@@ -7,10 +7,11 @@ use (
 	./hello
 	./integer
 	./iteration
+	./players
+	./redis
 	./reflects
 	./selects
 	./string
 	./structs
 	./wallets
-	./players
 )
