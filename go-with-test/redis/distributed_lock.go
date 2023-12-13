@@ -13,14 +13,13 @@ import (
 var (
 	lock    = "lock"
 	timeout = time.Second * 30
+	rdb     *redis.Client
 	count   = 0
 )
 
 // Unlock 释放分布式锁
 func Unlock(ctx context.Context) {
 	rdb := getRdb()
-	defer rdb.Close()
-
 	fmt.Printf("release lock: %v\n", rdb.Get(ctx, lock).Val())
 	fmt.Println(rdb.Del(ctx, lock))
 
@@ -29,8 +28,6 @@ func Unlock(ctx context.Context) {
 // Lock 获取分布式锁
 func Lock(ctx context.Context) bool {
 	rdb := getRdb()
-	defer rdb.Close()
-
 	lockValue := rand.Int()
 	fmt.Printf("acquire lock: %d\n", lockValue)
 	lockVal := rdb.SetNX(ctx, lock, lockValue, timeout).Val()
@@ -40,14 +37,18 @@ func Lock(ctx context.Context) bool {
 
 // init 初始化全局redis客户端
 func getRdb() *redis.Client {
-	return redis.NewClient(
-		&redis.Options{
-			Addr:     "localhost:6379",
-			Password: "",
-			DB:       0,
-			// Default is 3.
-			Protocol: 3,
-		})
+	if rdb == nil {
+		// get redis client directly
+		return redis.NewClient(
+			&redis.Options{
+				Addr:     "localhost:6379",
+				Password: "",
+				DB:       0,
+				// Default is 3.
+				Protocol: 3,
+			})
+	}
+	return rdb
 }
 
 // task 模拟任务
