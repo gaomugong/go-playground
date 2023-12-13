@@ -60,8 +60,3 @@ func example() {
 	vals, err := rdb.Sort(ctx, "list", &redis.Sort{Offset: 0, Count: 2, Order: "ASC"}).Result()
 	fmt.Println(vals, err)
 }
-
-func main() {
-	example()
-	lockTest()
-}

@@ -17,8 +17,8 @@ var (
 	count   = 0
 )
 
-// Unlock 释放分布式锁
-func Unlock(ctx context.Context) {
+// relaseLock 释放分布式锁
+func relaseLock(ctx context.Context) {
 	rdb := getRdb()
 	fmt.Printf("release lock: %v\n", rdb.Get(ctx, lock).Val())
 	fmt.Println(rdb.Del(ctx, lock))
@@ -26,7 +26,7 @@ func Unlock(ctx context.Context) {
 }
 
 // Lock 获取分布式锁
-func Lock(ctx context.Context) bool {
+func acquireLock(ctx context.Context) bool {
 	rdb := getRdb()
 	lockValue := rand.Int()
 	fmt.Printf("acquire lock: %d\n", lockValue)
@@ -57,7 +57,7 @@ func task() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	locked := Lock(ctx)
+	locked := acquireLock(ctx)
 	for !locked {
 		fmt.Println("lock failed, try after 1s")
 		select {
@@ -65,7 +65,7 @@ func task() {
 		// case <-time.Tick(time.Millisecond * 500):
 		// 每次循环时都会创建一个新的计时器，使用完后可以被垃圾回收，可以避免资源泄露，推荐
 		case <-time.After(time.Millisecond * 500):
-			locked = Lock(ctx)
+			locked = acquireLock(ctx)
 		case <-ctx.Done():
 			fmt.Println("task canceled")
 			return
@@ -79,8 +79,8 @@ func task() {
 	fmt.Println("lock success start task")
 
 	defer func() {
-		fmt.Println("Unlock after job finished")
-		Unlock(ctx)
+		fmt.Println("relaseLock after job finished")
+		relaseLock(ctx)
 	}()
 
 	fmt.Printf("job started: %d\n", count)
