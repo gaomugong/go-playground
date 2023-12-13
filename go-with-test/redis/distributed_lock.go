@@ -53,7 +53,10 @@ func getRdb() *redis.Client {
 
 // task 模拟任务
 func task() {
-	ctx := context.Background()
+	// ctx := context.Background()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	locked := Lock(ctx)
 	for !locked {
 		fmt.Println("lock failed, try after 1s")
@@ -64,6 +67,7 @@ func task() {
 		case <-time.After(time.Millisecond * 500):
 			locked = Lock(ctx)
 		case <-ctx.Done():
+			fmt.Println("task canceled")
 			return
 		}
 	}
