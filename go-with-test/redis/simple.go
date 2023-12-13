@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func main() {
+func example() {
 	var ctx = context.Background()
 
 	// get redis client from url
@@ -59,4 +59,9 @@ func main() {
 
 	vals, err := rdb.Sort(ctx, "list", &redis.Sort{Offset: 0, Count: 2, Order: "ASC"}).Result()
 	fmt.Println(vals, err)
+}
+
+func main() {
+	example()
+	lockTest()
 }
