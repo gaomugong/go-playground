@@ -41,6 +41,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("greet failed: %v", err)
 	}
+	log.Printf("Greeting: %s", r.GetMessage())
 
+	r, err = c.SayHelloAgain(ctx, &p.HelloRequest{Name: name})
+	if err != nil {
+		log.Fatalf("greet failed: %v", err)
+	}
 	log.Printf("Greeting: %s", r.GetMessage())
 }

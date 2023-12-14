@@ -21,6 +21,12 @@ func (server) SayHello(ctx context.Context, req *p.HelloRequest) (*p.HelloReply,
 	return &p.HelloReply{Message: fmt.Sprintf("hello %s", name)}, nil
 }
 
+func (server) SayHelloAgain(ctx context.Context, req *p.HelloRequest) (*p.HelloReply, error) {
+	name := req.GetName()
+	log.Printf("Received: %s", name)
+	return &p.HelloReply{Message: fmt.Sprintf("hello %s", name)}, nil
+}
+
 // 这里返回的是个指针，别被坑到了...
 var port = flag.Int("port", 50051, "The server port")
 
