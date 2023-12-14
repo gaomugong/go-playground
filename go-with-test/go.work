@@ -4,6 +4,7 @@ use (
 	./arrayslice
 	./concurrency
 	./dicts
+	./grpc
 	./hello
 	./integer
 	./iteration
