@@ -2,12 +2,10 @@ package http
 
 import (
 	"context"
-	"log"
 	"testing"
 )
 
 func f1(ctx context.Context, input *Input, result *Result) {
-	log.Println("f1", ctx, input, result)
 }
 
 func TestTask(t *testing.T) {
@@ -22,7 +20,6 @@ func TestTask(t *testing.T) {
 
 		task.AddRunner("clean-task", RunnerFunc(f1))
 		task.AddRunner("api-test", RunnerFunc(func(ctx context.Context, input *Input, result *Result) {
-			log.Println("api-test", ctx, input, result)
 		}))
 		task.Run()
 	})

@@ -7,6 +7,7 @@ package http
 import (
 	"context"
 	"log"
+	"sync"
 )
 
 // Input Run参数
@@ -50,8 +51,29 @@ func (t *Task) AddRunner(name string, runner Runner) {
 // Run 批量执行任务
 func (t *Task) Run() {
 	// TODO: 这里可以简化Run的定义，只传入context，参数在 AddRunner 时就加入到 runners 中
+	var wg sync.WaitGroup
+	wg.Add(len(t.runners))
+
 	for name, runner := range t.runners {
-		log.Printf("[%s] started\n", name)
-		runner.Run(context.Background(), &Input{}, &Result{})
+		//log.Printf("[%s] started\n", name)
+		//runner.Run(context.Background(), &Input{}, &Result{})
+
+		// 常见goroutine的坑
+		// 2023/12/17 05:40:15 [api-test] started
+		// 2023/12/17 05:40:15 [api-test] started
+		//go func() {
+		//	defer wg.Done()
+		//	// 这里的runner和name会读取到for循环中的最后一个，而不是预想的迭代顺序中的一个
+		//	log.Printf("[%s] started\n", name)
+		//	runner.Run(context.Background(), &Input{}, &Result{})
+		//}()
+
+		go func(name string, runner Runner) {
+			defer wg.Done()
+			log.Printf("[%s] started\n", name)
+			runner.Run(context.Background(), &Input{}, &Result{})
+		}(name, runner)
 	}
+
+	wg.Wait()
 }
