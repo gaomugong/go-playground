@@ -1,7 +1,6 @@
 package zookeeper
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"time"
@@ -9,18 +8,39 @@ import (
 	"github.com/go-zookeeper/zk"
 )
 
-type ZK struct {
-	conn *zk.Conn
-}
-
-func (z *ZK) connect(url string) (*zk.Conn, error) {
-	conn, _, err := zk.Connect([]string{url}, time.Second*5)
+func simple() {
+	conn, _, err := zk.Connect([]string{"127.0.0.1"}, time.Second) //*10)
 	if err != nil {
-		return nil, fmt.Errorf("new zk connection error: %w", err)
+		panic(err)
 	}
 
-	z.conn = conn
-	return nil, nil
+	path := "/miya"
+	var emptyData []byte
+
+	if exists, _, err := conn.Exists(path); err == nil && exists {
+		_ = conn.Delete(path, -1)
+	}
+
+	if path, err = conn.Create(path, emptyData, 0, zk.WorldACL(zk.PermAll)); err != nil {
+		panic(err)
+	}
+
+	exists, _, err := conn.Exists(path)
+	if err != nil || !exists {
+		panic(err)
+	}
+
+	if _, err := conn.Set(path, []byte("hello miya"), -1); err != nil {
+		panic(err)
+	}
+
+	if data, _, err := conn.Get(path); err != nil || string(data) != "hello miya" {
+		panic(err)
+	}
+
+	//if err := conn.Delete(path, -1); err != nil {
+	//	panic(err)
+	//}
 }
 
 func connectBasic() {
@@ -77,19 +97,4 @@ func connectAdvance() {
 		panic(err)
 	}
 	log.Printf("children: %v", children)
-}
-
-func main() {
-	c, _, err := zk.Connect([]string{"127.0.0.1"}, time.Second) //*10)
-	if err != nil {
-		panic(err)
-	}
-
-	children, stat, ch, err := c.ChildrenW("/")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v %+v\n", children, stat)
-	e := <-ch
-	fmt.Printf("%+v\n", e)
 }
