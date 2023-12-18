@@ -16,4 +16,5 @@ use (
 	./string
 	./structs
 	./wallets
+	./zookeeper
 )
