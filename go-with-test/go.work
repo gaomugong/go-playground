@@ -3,6 +3,7 @@ go 1.21.4
 use (
 	./arrayslice
 	./concurrency
+	./consul
 	./dicts
 	./grpc
 	./hello
