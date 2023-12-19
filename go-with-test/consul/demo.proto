@@ -4,7 +4,11 @@ package consul;
 
 // Demo service
 service Demo {
+    rpc Ping(PingRequest) returns (Response) {};
     rpc SendRequest(Request) returns (Response) {};
+}
+
+message PingRequest {
 }
 
 message Request {

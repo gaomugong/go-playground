@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DemoClient interface {
+	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*Response, error)
 	SendRequest(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -31,6 +32,15 @@ type demoClient struct {
 
 func NewDemoClient(cc grpc.ClientConnInterface) DemoClient {
 	return &demoClient{cc}
+}
+
+func (c *demoClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/consul.Demo/Ping", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *demoClient) SendRequest(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
@@ -46,6 +56,7 @@ func (c *demoClient) SendRequest(ctx context.Context, in *Request, opts ...grpc.
 // All implementations must embed UnimplementedDemoServer
 // for forward compatibility
 type DemoServer interface {
+	Ping(context.Context, *PingRequest) (*Response, error)
 	SendRequest(context.Context, *Request) (*Response, error)
 	mustEmbedUnimplementedDemoServer()
 }
@@ -54,6 +65,9 @@ type DemoServer interface {
 type UnimplementedDemoServer struct {
 }
 
+func (UnimplementedDemoServer) Ping(context.Context, *PingRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
 func (UnimplementedDemoServer) SendRequest(context.Context, *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRequest not implemented")
 }
@@ -68,6 +82,24 @@ type UnsafeDemoServer interface {
 
 func RegisterDemoServer(s grpc.ServiceRegistrar, srv DemoServer) {
 	s.RegisterService(&Demo_ServiceDesc, srv)
+}
+
+func _Demo_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DemoServer).Ping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/consul.Demo/Ping",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DemoServer).Ping(ctx, req.(*PingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Demo_SendRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -95,6 +127,10 @@ var Demo_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "consul.Demo",
 	HandlerType: (*DemoServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Ping",
+			Handler:    _Demo_Ping_Handler,
+		},
 		{
 			MethodName: "SendRequest",
 			Handler:    _Demo_SendRequest_Handler,
