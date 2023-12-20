@@ -5,6 +5,7 @@ use (
 	./concurrency
 	./consul
 	./dicts
+	./etcd
 	./grpc
 	./hello
 	./http
