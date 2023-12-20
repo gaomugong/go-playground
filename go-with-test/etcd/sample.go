@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+// https://www.cnblogs.com/wangtaobiu/p/16173610.html
+// https://learnku.com/articles/37344
+// https://juejin.cn/post/7101947466722836487
 func main() {
 	// 创建客户端
 	cli, err := clientv3.New(clientv3.Config{
