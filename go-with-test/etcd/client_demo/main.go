@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"math/rand"
+	"time"
 
 	"github.com/gaohongsong/go-playground/go-with-test/consul/service"
 	"github.com/gaohongsong/go-playground/go-with-test/etcd/regdiscover"
@@ -43,29 +44,29 @@ func main() {
 
 	_ = svrDiscover.WatchService("/web")
 
-	entries := svrDiscover.GetServices()
-	log.Println("discover services:", entries)
+	for {
+		select {
+		case <-time.Tick(time.Second * 3):
+			entries := svrDiscover.GetServices()
+			log.Println("discover services:", entries)
 
-	selectIndex := rand.Intn(len(entries))
-	svrUrl := entries[selectIndex]
-	log.Printf("target-grpc -> %s\n", svrUrl)
+			selectIndex := rand.Intn(len(entries))
+			svrUrl := entries[selectIndex]
+			log.Printf("target-grpc -> %s\n", svrUrl)
 
-	conn, err := grpc.Dial(svrUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("connect server error: %s", err)
+			conn, err := grpc.Dial(svrUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+			if err != nil {
+				log.Fatalf("connect server error: %s", err)
+			}
+			defer conn.Close()
+
+			client := service.NewDemoClient(conn)
+
+			resp, err := client.SendRequest(context.Background(), &service.Request{Username: *name})
+			if err != nil {
+				log.Fatalf("send request error: %s", err)
+			}
+			log.Printf("response message: %v", resp.GetMessage())
+		}
 	}
-	defer conn.Close()
-
-	client := service.NewDemoClient(conn)
-	// pong, err := client.Ping(context.Background(), &service.PingRequest{})
-	// if err != nil {
-	// 	log.Fatalf("send ping request error: %s", err)
-	// }
-	// log.Printf("ping -> %s", pong.GetMessage())
-
-	resp, err := client.SendRequest(context.Background(), &service.Request{Username: *name})
-	if err != nil {
-		log.Fatalf("send request error: %s", err)
-	}
-	log.Printf("response message: %v", resp.GetMessage())
 }
