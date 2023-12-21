@@ -65,6 +65,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer svrReg.Close()
 
 	// 注册服务
 	if err = svrReg.RegisterService("/web/"+portStr, "127.0.0.1:"+portStr); err != nil {
