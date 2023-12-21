@@ -1,4 +1,4 @@
-package main
+package regdiscover
 
 import (
 	"context"
@@ -70,7 +70,7 @@ func (s *ServiceDiscovery) watcher(prefix string) {
 func (s *ServiceDiscovery) SetServiceList(key, val string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	s.serverList[key] = string(val)
+	s.serverList[key] = val
 	log.Println("put key :", key, "val:", val)
 }
 
@@ -99,15 +99,14 @@ func (s *ServiceDiscovery) Close() error {
 	return s.cli.Close()
 }
 
-func main() {
-	var endpoints = []string{"127.0.0.1:2379"}
-	ser := NewServiceDiscovery(endpoints)
-	defer ser.Close()
-	_ = ser.WatchService("/web")
+func main2() {
+	svrDiscover := NewServiceDiscovery([]string{"127.0.0.1:2379"})
+	defer svrDiscover.Close()
+	_ = svrDiscover.WatchService("/web")
 	for {
 		select {
 		case <-time.Tick(10 * time.Second):
-			log.Println(ser.GetServices())
+			log.Println(svrDiscover.GetServices())
 		}
 	}
 }
