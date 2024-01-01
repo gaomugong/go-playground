@@ -1,16 +1,22 @@
-go 1.21.0
+go 1.21.4
 
 use (
 	./arrayslice
 	./concurrency
+	./consul
 	./dicts
+	./etcd
+	./grpc
 	./hello
+	./http
 	./integer
 	./iteration
+	./players
+	./redis
 	./reflects
 	./selects
 	./string
 	./structs
 	./wallets
-	./players
+	./zookeeper
 )

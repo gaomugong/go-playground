@@ -1,0 +1,20 @@
+syntax = "proto3";
+option go_package = "./service";
+package consul;
+
+// Demo service
+service Demo {
+    rpc Ping(PingRequest) returns (Response) {};
+    rpc SendRequest(Request) returns (Response) {};
+}
+
+message PingRequest {
+}
+
+message Request {
+    string username = 1;
+}
+
+message Response {
+    string message = 1;
+}
